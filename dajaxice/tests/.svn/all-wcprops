@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/site-novomilenio/!svn/ver/21/novomilenio_project/dajaxice/tests
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/site-novomilenio/!svn/ver/21/novomilenio_project/dajaxice/tests/__init__.py
+END
+ajax.py
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/site-novomilenio/!svn/ver/21/novomilenio_project/dajaxice/tests/ajax.py
+END
+urls.py
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/site-novomilenio/!svn/ver/21/novomilenio_project/dajaxice/tests/urls.py
+END

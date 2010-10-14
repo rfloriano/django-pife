@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/site-novomilenio/!svn/ver/21/novomilenio_project/dajaxice
+END
+views.py
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/site-novomilenio/!svn/ver/21/novomilenio_project/dajaxice/views.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/site-novomilenio/!svn/ver/21/novomilenio_project/dajaxice/__init__.py
+END
+utils.py
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/site-novomilenio/!svn/ver/21/novomilenio_project/dajaxice/utils.py
+END
+exceptions.py
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/site-novomilenio/!svn/ver/21/novomilenio_project/dajaxice/exceptions.py
+END
+models.py
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/site-novomilenio/!svn/ver/21/novomilenio_project/dajaxice/models.py
+END
+urls.py
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/site-novomilenio/!svn/ver/21/novomilenio_project/dajaxice/urls.py
+END

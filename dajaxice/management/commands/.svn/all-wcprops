@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/site-novomilenio/!svn/ver/21/novomilenio_project/dajaxice/management/commands
+END
+generate_static_dajaxice.py
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/site-novomilenio/!svn/ver/21/novomilenio_project/dajaxice/management/commands/generate_static_dajaxice.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/site-novomilenio/!svn/ver/21/novomilenio_project/dajaxice/management/commands/__init__.py
+END

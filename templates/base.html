@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load dajaxice_templatetags %}
+    <meta charset="UTF-8" />
+    <title>Pife</title>
+    <link type="text/css" href="{{ MEDIA_URL }}css/jquery.ui.all.css" rel="stylesheet" />
+    <link type="text/css" href="{{ MEDIA_URL }}css/base.css" rel="stylesheet" />
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-ui-1.8.4.custom.min.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.dajax.core.js"></script>
+    <script type="text/javascript" language="javascript">
+        var cards = [ {% for card in playerCards %}'{{ card.id }}'{% if not forloop.last %},{% endif %}{% endfor %} ]
+        var trash = null;
+        var group1 = [];
+        var group2 = [];
+        var group3 = [];
+
+        var deck_enabled = true;
+        var trash_enabled = false;
+        var trash_can_get = false;
+//        TODO: verificar flags no servidor
+    </script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/basic.js"></script>
+    {% dajaxice_js_import %}
+
+</head>
+<body>
+<div class="demo">
+
+    <div id="deck">
+        <img class="left" src="{{ MEDIA_URL }}images/cards/b.gif" onclick="canFlipCard();"/>
+        <div id="flipped-div" class="shadow left"></div>
+    </div>
+
+    <div id="garbage" class="shadow right"></div>
+
+    <div class="clear"></div>
+
+    <div id="my-game">
+        {% for card in playerCards %}
+        <img class="draggable-mycard" src="{{ MEDIA_URL }}{{ card.frontImage }}" name="{{ card.id }}" id="{{ card.id }}" />
+        {% endfor %}
+    </div>
+
+    <div class="clear"></div>
+
+    <div id="game">
+        <div id="group1" class="groups left">
+            <div id="g1" class="shadow left droppable-game"></div>
+            <div id="g2" class="shadow left droppable-game"></div>
+            <div id="g3" class="shadow left droppable-game"></div>
+        </div>
+        <div id="group2" class="groups left">
+            <div id="g4" class="shadow left droppable-game"></div>
+            <div id="g5" class="shadow left droppable-game"></div>
+            <div id="g6" class="shadow left droppable-game"></div>
+        </div>
+        <div id="group3" class="groups left">
+            <div id="g7" class="shadow left droppable-game"></div>
+            <div id="g8" class="shadow left droppable-game"></div>
+            <div id="g9" class="shadow left droppable-game"></div>
+        </div>
+    </div>
+
+    <button id="bati">Bati!</button>
+    <button id="restart">Recomeçar</button>
+
+    <div id="jogo-dele" style="clear: both; width=100%">
+    </div>
+
+</div>
+
+</body>
+
+</html>
+
