@@ -14,7 +14,10 @@ def next_card(request):
     card = m.next_card()
     m.players[0].get_card(card) # usuario pegou a carta do bolo
 #    print m.players[0].cards
-    dajax.script("flipCard('%s', '%s'); init(); trash_can_get = false;" % (settings.MEDIA_URL+card.frontImage(), card.id()))
+    if not card is None:
+        dajax.script("flipCard('%s', '%s'); init(); trash_can_get = false;" % (settings.MEDIA_URL+card.frontImage(), card.id()))
+    else:
+        dajax.script("alert('game over - draw game')")
     return dajax.json()
 
 def get_card(request, card, trash):
@@ -40,8 +43,14 @@ def trash_card(request, card):
             string += '<img class="ui-draggable draggable-card trash" src="%s" id="%s" name="%s"/>' % (settings.MEDIA_URL+i.frontImage(), i.id(), i.id())
         dajax.assign("#jogo-dele", "innerHTML", string);
 
-    if isinstance(m._garbage, Pack):
-        dajax.script("alert('%s')" % ("Computador ganhou", str(m._garbage)))
+    if isinstance(m._garbage, list):
+        dajax.script("$('#jogo-dele').html('')");
+        string = ""
+        for i in m._garbage:
+            for j in i:
+                string += '<img class="ui-draggable draggable-card trash" src="%s" id="%s" name="%s"/>' % (settings.MEDIA_URL+j.frontImage(), j.id(), j.id())
+        dajax.script("alert('computador ganhou')")
+        dajax.assign("#jogo-dele", "innerHTML", string);
     else:
         dajax.script("toGarbageCard('%s', '%s'); init(); trash_can_get = true;" % (settings.MEDIA_URL+m._garbage.frontImage(), m._garbage.id()))
     return dajax.json()

@@ -68,28 +68,66 @@ class Computer(Player):
     def __repr__(self):
         return "Computer"
 
+    def check(self, exclude, set_cards):
+        result = True
+        for i in exclude:
+            if i.intersection(set_cards):
+                result = False
+                break
+        return result
+
     def brain(self, garbage, pack):
         pos = 0
         self.get_card(garbage)
+        exclude = []
         for card in self.cards:
-            seq = self.has_sequence(card) + self.has_same_value(card)
-            self.cards[pos].rate = seq
+            rate_seq = self.has_sequence(card)
+            rate_value = self.has_same_value(card)
+            if rate_seq == 20:
+                cards = self.get_seq_group(card)
+                cards.append(card)
+                set_cards = set(cards)
+                if not set_cards in exclude and self.check(exclude, set_cards):
+                    exclude.append(set_cards)
+            else:
+                if rate_value == 20:
+                    cards = self.get_same_group(card)
+                    cards.append(card)
+                    set_cards = set(cards)
+                    if not set_cards in exclude and self.check(exclude, set_cards):
+                        exclude.append(set_cards)
+            self.cards[pos].rate = rate_value + rate_seq
             pos += 1
         print "lixo ", garbage, garbage.rate
         rates = self.cards.get_rates()
         index = rates.index(min(rates))
         rate = rates[index]
         if rate < garbage.rate and garbage.rate > 0 and garbage != self.cards[index]:
-#            pass
             print "pegou lixo ", garbage, garbage.rate
         else:
             garbage = self.discart(garbage)
             c = pack.next_card()
             self.get_card(c)
+
             pos = 0
+            exclude = []
             for card in self.cards:
-                seq = self.has_sequence(card) + self.has_same_value(card)
-                self.cards[pos].rate = seq
+                rate_seq = self.has_sequence(card)
+                rate_value = self.has_same_value(card)
+                if rate_seq == 20:
+                    cards = self.get_seq_group(card)
+                    cards.append(card)
+                    set_cards = set(cards)
+                    if not set_cards in exclude and self.check(exclude, set_cards):
+                        exclude.append(set_cards)
+                else:
+                    if rate_value == 20:
+                        cards = self.get_same_group(card)
+                        cards.append(card)
+                        set_cards = set(cards)
+                        if not set_cards in exclude and self.check(exclude, set_cards):
+                            exclude.append(set_cards)
+                self.cards[pos].rate = rate_value + rate_seq
                 pos += 1
             print "comprou ", c, c.rate
             rates = self.cards.get_rates()
@@ -98,106 +136,73 @@ class Computer(Player):
         rates = self.cards.get_rates()
         index = rates.index(min(rates))
         print 'min ---> ', self.cards[index], self.cards[index].rate
-        if self.cards[index].rate >= 2:
-            cards = Pack(self.cards.sort_by_rate())
-            groups = []
-            for card in cards:
-                groups.append(set(self.win_game(card)))
-            new_groups = []
-            for i in groups:
-                if i and not i in new_groups:
-                    new_groups.append(i)
-            v_groups = []
-            ls = []
-            win_groups = list(new_groups)
-            a = []
-            exclude = []
-            for groupa in win_groups:
-                for groupb in win_groups:
-                    if groupb != groupa and groupb in new_groups and not groupb in exclude and not len(groupa.intersection(groupb)) == 0:
-                        print "----", groupb
-                        new_groups.remove(groupb)
-                exclude.append(groupa)
-            l = win_groups
-            o = exclude
-            p = []
-            for i in l:
-                for j in o:
-                    if not j in l:
-                        p.append(j)
-            #TODO: Implementar funcionalidade de aprendizado - salvar vitorias do jogador e utiliza-las como novos estados meta
-            #TODO: Verificar a possibilidade de utilizar busca em amplitude
-            if len(p)>=3 or self.cards[index].rate >= 2:
-                print "ganhou"
-                print "------", self.cards
-                return self.cards
+        if len(exclude) == 3:
+            print "Computador ganhou"
+            return exclude
         return discarted
 
     def discart(self, card):
         return self.cards.discart(card)
 
-    def win_game(self, card):
-        sequence = lambda x: ([x, x+1, x+2], [x, x-1, x-2], [x, x-1, x+1])
+    def get_seq_group(self, card):
+        sequence = lambda x: [x-1, x, x+1]
         same_suit = lambda card, card2: card.suit == card2.suit
+        seq = sequence(card._value)
 
-        group = []
-        for seq in sequence(card._value):
-            rate = 0
-            c1 = self.cards.has_card(seq[1])
-            if c1 and same_suit(card, c1):
-                rate += 1
-            c2 = self.cards.has_card(seq[2])
-            if c2 and same_suit(card, c2):
-                rate += 1
-            if rate == 2:
-                group = [card, c1, c2]
-                break
-        if group:
-            return group
-        not_same_suit = lambda card, card2: card.suit != card2.suit
-        rate = 0
-        tmp_cards = [card]
-        for c in self.cards:
-            if c != card:
-                if c._value == card._value and not_same_suit(c, card):
-                    tmp_cards.append(c)
-                    if len(tmp_cards) == 3:
-                        group = tmp_cards
-                        break
-        return group
+        c = self.cards.has_card(seq[0])
+        d = self.cards.has_card(seq[2])
+
+        result = []
+        if not c is None and same_suit(card, c):
+            result.append(c)
+        if not c is None and same_suit(card, d):
+            result.append(d)
+        return result
 
     def has_sequence(self, card):
-        sequence = lambda x: [x, x+1, x+2]
+        sequence = lambda x: [x-1, x, x+1]
+        print card
         same_suit = lambda card, card2: card.suit == card2.suit
 
-        myseq = sequence(card._value)
-        c = self.cards.has_card(myseq[1])
+        seq = sequence(card._value)
+
+        c = self.cards.has_card(seq[0])
+        d = self.cards.has_card(seq[2])
+
         rate = 0
-        if c and same_suit(card, c):
-            rate += 1
-        c = self.cards.has_card(myseq[2])
-        if c and same_suit(card, c):
-            rate += 1
-        reverse = lambda x: [x, x-1, x-2]
-        myseq = reverse(card._value)
-        c = self.cards.has_card(myseq[1])
-        if c and same_suit(card, c):
-            rate += 1
-        c = self.cards.has_card(myseq[2])
-        if c and same_suit(card, c):
-            rate += 1
+        if not c is None and not d is None and same_suit(card, c) and same_suit(card, d):
+            rate = 20
+        elif not c is None and same_suit(card, c):
+            rate = 10
+        elif not d is None and same_suit(card, d):
+            rate = 10
         return rate
+
+    def get_same_group(self, card, exclude=None):
+        not_same_suit = lambda card, card2: card.suit != card2.suit
+        result = []
+        for c in self.cards:
+            if not c is card and not c is exclude and c._value == card._value and not_same_suit(c, card):
+                result.append(c)
+        return result
 
     def has_same_value(self, card):
         not_same_suit = lambda card, card2: card.suit != card2.suit
         rate = 0
         for c in self.cards:
-            if c != card:
+            if not c is card:
                 if c._value == card._value and not_same_suit(c, card):
-                    rate += 1
-                if c._value == card._value and not not_same_suit(c, card):
-                    rate -= 10
+                    rate += 10
+                if (c._value == card._value and not not_same_suit(c, card)):
+                    rate -= 20
         return rate
+
+    def count(self, card):
+        i = 0
+        for c in self.cards:
+            if c._value == card._value:
+                i += 1
+        return i
 
     def play(self, garbage, pack, verbose=True):
         if verbose:
